@@ -1,0 +1,128 @@
+import sys
+from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QLineEdit, QPushButton, QTextEdit, QMessageBox, QComboBox
+
+class EkspedisiApp(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Ekspedisi SI ENGGANG")
+        self.setup_ui()
+
+    def setup_ui(self):
+        # Labels
+        self.label_welcome = QLabel("====== Selamat Datang di Ekspedisi SI ENGGANG ======")
+        self.label_nama = QLabel("Nama:")
+        self.label_no_telp = QLabel("No. Telp:")
+        self.label_asal_prov = QLabel("Pilih Provinsi:")
+        self.label_kota = QLabel("Kota:")
+        self.label_kecamatan = QLabel("Kecamatan:")
+        self.label_alamat = QLabel("Alamat Lengkap:")
+        self.label_jenis_barang = QLabel("Jenis Barang:")
+        self.label_berat_barang = QLabel("Berat Barang (kg):")
+        self.label_jenis_layanan = QLabel("Jenis Layanan:")
+        self.label_kartu_member = QLabel("Apakah anda memiliki kartu member:")
+        self.label_proteksi = QLabel("Tambah Proteksi Barang dengan gratis (y/t):")
+        self.label_lanjut = QLabel("Lanjut Pengiriman Barang Lain (y/t):")
+
+        # Line Edits
+        self.line_edit_nama = QLineEdit()
+        self.line_edit_no_telp = QLineEdit()
+        self.line_edit_asal_prov = QComboBox()
+        self.line_edit_asal_prov.addItems(["Jawa", "Sumatra", "Kalimantan", "Sulawesi", "Papua", "Bali", "NTT", "NTB", "Maluku", "Aceh"])
+        self.line_edit_kota = QLineEdit()
+        self.line_edit_kecamatan = QLineEdit()
+        self.line_edit_alamat = QTextEdit()
+        self.line_edit_jenis_barang = QLineEdit()
+        self.line_edit_berat_barang = QLineEdit()
+        self.line_edit_jenis_layanan = QComboBox()
+        self.line_edit_jenis_layanan.addItems(["Regular", "Express", "Kilat"])
+        self.line_edit_kartu_member = QLineEdit()
+        self.line_edit_proteksi = QComboBox()
+        self.line_edit_proteksi.addItems(["Ya", "Tidak"])
+        self.line_edit_lanjut = QComboBox()
+        self.line_edit_lanjut.addItems(["Ya", "Tidak"])
+
+        # Buttons
+        self.button_submit = QPushButton("Submit")
+        self.button_submit.clicked.connect(self.submit_clicked)
+
+        # Layout
+        layout = QVBoxLayout()
+        layout.addWidget(self.label_welcome)
+        layout.addWidget(self.label_nama)
+        layout.addWidget(self.line_edit_nama)
+        layout.addWidget(self.label_no_telp)
+        layout.addWidget(self.line_edit_no_telp)
+        layout.addWidget(self.label_asal_prov)
+        layout.addWidget(self.line_edit_asal_prov)
+        layout.addWidget(self.label_kota)
+        layout.addWidget(self.line_edit_kota)
+        layout.addWidget(self.label_kecamatan)
+        layout.addWidget(self.line_edit_kecamatan)
+        layout.addWidget(self.label_alamat)
+        layout.addWidget(self.line_edit_alamat)
+        layout.addWidget(self.label_jenis_barang)
+        layout.addWidget(self.line_edit_jenis_barang)
+        layout.addWidget(self.label_berat_barang)
+        layout.addWidget(self.line_edit_berat_barang)
+        layout.addWidget(self.label_jenis_layanan)
+        layout.addWidget(self.line_edit_jenis_layanan)
+        layout.addWidget(self.label_kartu_member)
+        layout.addWidget(self.line_edit_kartu_member)
+        layout.addWidget(self.label_proteksi)
+        layout.addWidget(self.line_edit_proteksi)
+        layout.addWidget(self.label_lanjut)
+        layout.addWidget(self.line_edit_lanjut)
+        layout.addWidget(self.button_submit)
+
+        # Set the layout for the window
+        self.setLayout(layout)
+
+    def submit_clicked(self):
+        nama = self.line_edit_nama.text()
+        no_telp = self.line_edit_no_telp.text()
+        asal_prov = self.line_edit_asal_prov.currentText()
+        kota = self.line_edit_kota.text()
+        kecamatan = self.line_edit_kecamatan.text()
+        alamat = self.line_edit_alamat.toPlainText()
+        jenis_barang = self.line_edit_jenis_barang.text()
+        berat_barang = self.line_edit_berat_barang.text()
+        jenis_layanan = self.line_edit_jenis_layanan.currentText()
+        kartu_member = self.line_edit_kartu_member.text()
+        proteksi = self.line_edit_proteksi.currentText()
+        lanjut = self.line_edit_lanjut.currentText()
+
+        # Process the data as needed
+        total_biaya = self.calculate_total_biaya(berat_barang, jenis_layanan)
+
+        # Print the receipt
+        self.print_receipt(nama, no_telp, asal_prov, kota, kecamatan, alamat, jenis_barang, berat_barang, jenis_layanan, kartu_member, proteksi, lanjut, total_biaya)
+
+    def calculate_total_biaya(self, berat_barang, jenis_layanan):
+        harga = {"Regular": 5000, "Express": 10000, "Kilat": 15000}
+        total_biaya = harga[jenis_layanan] * int(berat_barang)
+        return total_biaya
+
+    def print_receipt(self, nama, no_telp, asal_prov, kota, kecamatan, alamat, jenis_barang, berat_barang, jenis_layanan, kartu_member, proteksi, lanjut, total_biaya):
+        receipt = f"""
+        ====== Resi Pemesanan ======
+        Nama: {nama}
+        No. Telp: {no_telp}
+        Asal Provinsi: {asal_prov}
+        Kota: {kota}
+        Kecamatan: {kecamatan}
+        Alamat Lengkap: {alamat}
+        Jenis Barang: {jenis_barang}
+        Berat Barang (kg): {berat_barang}
+        Jenis Layanan: {jenis_layanan}
+        Kartu Member: {kartu_member}
+        Proteksi: {proteksi}
+        Lanjut: {lanjut}
+        Total Biaya: {total_biaya}
+        """
+        QMessageBox.information(self, "Resi Pemesanan", receipt)
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    window = EkspedisiApp()
+    window.show()
+    sys.exit(app.exec_())
